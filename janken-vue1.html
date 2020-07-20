@@ -1,111 +1,104 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Document</title>
 </head>
+
 <body>
     <div id="app">
         <h1>基本のじゃんけん</h1>
         <br>
         <br>
         <h2>相手の手</h2>
-        <h3 >{{enemy}}</h3>
+        <h3>{{ displayEnemyHand }}</h3>
 
         <br>
         <br>
         <br>
-        <h1>{{judge}}</h1>
+        <h1>{{ displayResult }}</h1>
 
         <br>
         <br>
         <br>
         <h2>自分の手</h2>
-        <h3 >{{myhand}}</h3>
+        <h3>{{ displayMyHand }}</h3>
 
-        <button  v-on:click='gufunc()'>グー</button>
-        <button v-on:click='chofunc()'>チョキ</button>
-        <button  v-on:click='pafunc()'>パー</button>
-</div>
+        <button v-on:click='junken'>グー</button>
+        <button v-on:click='junken'>チョキ</button>
+        <button v-on:click='junken'>パー</button>
+    </div>
 
-<script src="https://cdn.jsdelivr.net/npm/vue"></script>
-<script>
-
-
-//変数・定数定義
-// let enemy = document.querySelector('#enemy');
-// let myhand = document.querySelector('#myhand');
-// let judge = document.querySelector('#judge');
-// const gu = document.querySelector('#gu');
-// const cho = document.querySelector('#cho');
-// const pa = document.querySelector('#pa');
-let num;
+    <script src="https://cdn.jsdelivr.net/npm/vue"></script>
+    <script>
 
 
-//Vueの定義
-new Vue({
-    el:'#app',
-    data:{
-        enemy:'ここに相手の出した手が出る',
-        judge:'ここに判定が出る',
-        myhand:'ここに自分の手がでる',
-    },
-    methods:{
-      gufunc:function(){
-        num = Math.floor(Math.random()*3);
-          this.myhand='グー';
-          if(num==0){
-                this.enemy='グー',
-                this.judge='あいこ'
+        new Vue({
+            el: '#app',
+            data: {
+                enemyHand: null,
+                result: null,
+                myHand: null,
+            },
+            computed: {
+                displayEnemyHand() {
+                    if (this.enemyHand == null) return 'ここに相手の手がでる'
+                    return this.changeNumToHand(this.enemyHand)
+                },
+                displayMyHand() {
+                    if (this.myHand == null) return 'ここに自分の手がでる'
+                    return this.changeNumToHand(this.myHand)
+                },
+                displayResult() {
+                    if (this.result == null) return 'ここに勝敗がでる'
+                    return this.changeNumToResult(this.result)
+                }
+            },
+
+            methods: {
+                // 0 - 2の乱数を生成する関数
+                getRandomHand() {
+                    return Math.floor(Math.random() * 3)
+                },
+                // 引数を二つ取ってジャンケンの結果を返す関数(https://qiita.com/mpyw/items/3ffaac0f1b4a7713c869)
+                getJunkenResult(playerHand, enemyHand) {
+                    return (playerHand - enemyHand + 3) % 3
+                },
+                // 数値をジャンケンの手に変換する関数
+                changeNumToHand(num) {
+                    switch (num) {
+                        case 0:
+                            return 'グー'
+                        case 1:
+                            return 'チョキ'
+                        case 2:
+                            return 'パー'
+                    }
+                },
+                changeNumToResult(num) {
+                    switch (num) {
+                        case 0:
+                            return '引き分け'
+                        case 1:
+                            return '負け'
+                        case 2:
+                            return '勝ち'
+                    }
+                },
+                //　ジャンケンの手を表示ように加工する
+                setHands() {
+                    this.enemyHand = this.getRandomHand()
+                    this.myHand = this.getRandomHand()
+                },
+                // ジャンケンボタンのイベントハンドラ
+                junken() {
+                    this.setHands()
+                    this.result = this.getJunkenResult(this.myHand, this.enemyHand)
+                }
             }
-            if(num==1){
-                this.enemy='チョキ',
-                this.judge='勝ち'
-            }
-            if(num==2){
-                this.enemy='パー',
-                this.judge='負け'
-            }
-      },
-      chofunc:function(){
-        num = Math.floor(Math.random()*3);
-          this.myhand='チョキ';
-          if(num==0){
-                this.enemy='グー',
-                this.judge='負け'
-            }
-            if(num==1){
-                this.enemy='チョキ',
-                this.judge='あいこ'
-            }
-            if(num==2){
-                this.enemy='パー',
-                this.judge='勝ち'
-            }
-      },
-      pafunc:function(){
-        num = Math.floor(Math.random()*3);
-          this.myhand='パー';
-          if(num==0){
-                this.enemy='グー',
-                this.judge='勝ち'
-            }
-            if(num==1){
-                this.enemy='チョキ',
-                this.judge='負け'
-            }
-            if(num==2){
-                this.enemy='パー',
-                this.judge='あいこ'
-            }
-      }
-
-
-    }
-
-});
-
+        })
 
 
 
@@ -128,7 +121,7 @@ new Vue({
 //     enemy.innerHTML='パー'
 //     judge.innerHTML='負け'
 //    }
-   
+
 // }
 
 // cho.onclick = function(){
@@ -147,7 +140,7 @@ new Vue({
 //     enemy.innerHTML='パー'
 //     judge.innerHTML='勝ち'
 //    }
-   
+
 // }
 
 // pa.onclick = function(){
@@ -166,11 +159,12 @@ new Vue({
 //     enemy.innerHTML='パー'
 //     judge.innerHTML='あいこ'
 //    }
-   
+
 // }
 
 
 
-</script>
+    </script>
 </body>
+
 </html>
