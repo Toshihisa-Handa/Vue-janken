@@ -26,9 +26,9 @@
         <h2>自分の手</h2>
         <h3>{{ displayMyHand }}</h3>
 
-        <button v-on:click='junken'>グー</button>
-        <button v-on:click='junken'>チョキ</button>
-        <button v-on:click='junken'>パー</button>
+        <button v-on:click='junken(0)'>グー</button>
+        <button v-on:click='junken(1)'>チョキ</button>
+        <button v-on:click='junken(2)'>パー</button>
     </div>
 
     <script src="https://cdn.jsdelivr.net/npm/vue"></script>
@@ -58,10 +58,6 @@
             },
 
             methods: {
-                // 0 - 2の乱数を生成する関数
-                getRandomHand() {
-                    return Math.floor(Math.random() * 3)
-                },
                 // 引数を二つ取ってジャンケンの結果を返す関数(https://qiita.com/mpyw/items/3ffaac0f1b4a7713c869)
                 getJunkenResult(playerHand, enemyHand) {
                     return (playerHand - enemyHand + 3) % 3
@@ -87,14 +83,10 @@
                             return '勝ち'
                     }
                 },
-                //　ジャンケンの手を表示ように加工する
-                setHands() {
-                    this.enemyHand = this.getRandomHand()
-                    this.myHand = this.getRandomHand()
-                },
                 // ジャンケンボタンのイベントハンドラ
-                junken() {
-                    this.setHands()
+                junken(myNum) {
+                    this.myHand = myNum
+                    this.enemyHand = Math.floor(Math.random() * 3)
                     this.result = this.getJunkenResult(this.myHand, this.enemyHand)
                 }
             }
